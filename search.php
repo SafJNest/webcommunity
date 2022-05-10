@@ -54,7 +54,6 @@
 	color: white;
   }
   </style>
-  <script src="script.js"></script>
 </head>
 
 <body>
@@ -63,28 +62,48 @@
 <ul>
   <li><a href="index.php" href="">AggiungiEvento</a></li>
   <li><a href="search.php" class="active">Ricerca Evento</a></li>
-  <li><a href="">About</a></li>
+  <li><a><?php session_start(); echo $nick = $_SESSION['nickname']; ?></a></li>
 </ul>
 <div class="content">
 
 </div>
 <div class="search">
 <h1>CERCA EVENTO</h1>
-  <form action="search.php" method="post">
-    <input type="text" name="search" placeholder="Citta di...">
+  <form action="search.php" method="post" id="formuser">
+    <label for="data">Citta</label><br>
+    <input type="text" name="search" placeholder="Citta di..."><br><br>
+    <label for="data">Data</label><br>
+    <input type="date" id="data" name="data"><br><br>
+    <label for="data">Categoria</label><br>
+    <select name="categoria" id="categoria">
+    <option value="">Scegli</option>
+    <option value="concerto">Concerto</option>
+    <option value="balletto">Balletto</option>
+    <option value="teatro">Spettacolo teatrale</option>
+    <option value="mostra">Mostra d'arte</option>
+    </select><br><br>
     <input type="submit" value="search">
   </form>
 </div>
 
-
 <?php
 if(isset($_POST['search'])){
   search();
-}
+} 
+
 
 function search(){
   $conn = new mysqli("localhost", "root", "", "webcommunity");
-  $sql = "SELECT * FROM eventi WHERE luogo LIKE '".$_POST['search']."%'";
+  $categoria = $_POST['categoria'];
+  $citta = $_POST['search'];
+  $data = $_POST['data'];
+  /*
+  $sql = "SELECT idCategoria FROM categorie WHERE descrizione = '$categoria'";
+  $result = $conn->query($sql);
+  $row = $result->fetch_assoc();
+  $id_categoria = $row['idCategoria'];
+  */
+  $sql = "SELECT * FROM eventi join categorie on eventi.categoria = categorie.idCategoria WHERE categorie.descrizione = '$categoria' /*AND (luogo LIKE '$citta'% OR data LIKE '$data'%)*/;";
   $result = $conn->query($sql);
   echo "<table>";
   echo "<tr>";
@@ -100,8 +119,6 @@ function search(){
     echo "<td>".$row['luogo']."</td>";
     echo "<td>".$row['categoria']."</td>";
     echo "</tr>";
-
-
   }
 }
 ?>

@@ -54,7 +54,6 @@
 	color: white;
   }
   </style>
-  <script src="script.js"></script>
 </head>
 
 <body>
@@ -63,7 +62,7 @@
 <ul>
   <li><a href="index.php"class="active" href="">AggiungiEvento</a></li>
   <li><a href="search.php">Ricerca Evento</a></li>
-  <li><a href="">About</a></li>
+  <li><a><?php session_start(); echo $nick = $_SESSION['nickname']; ?></a></li>
 </ul>
 <div class="content">
 
@@ -106,31 +105,10 @@ function insertIntoDb(){
   $result = $conn->query($sql);
   $row = $result->fetch_assoc();
   $id_categoria = $row['idCategoria'];
-  $sql = "INSERT INTO eventi (titolo, data, luogo,publicatoDa, categoria) VALUES ('$titolo', '$data', '$luogo','ABCDEFG012345678' ,'$id_categoria')";
+  $cf = $_SESSION['CF'];
+  $sql = "INSERT INTO eventi (titolo, data, luogo,publicatoDa, categoria) VALUES ('$titolo', '$data', '$luogo','$cf' ,'$id_categoria')";
   $conn->query($sql);
   $conn->close();
-}
-function search(){
-  $conn = new mysqli("localhost", "root", "", "webcommunity");
-  $sql = "SELECT * FROM eventi";
-  $result = $conn->query($sql);
-  echo "<table>";
-  echo "<tr>";
-  echo "<th>Titolo</th>";
-  echo "<th>Data</th>";
-  echo "<th>Luogo</th>";
-  echo "<th>Categoria</th>";
-  echo "</tr>";
-  while($row = $result->fetch_assoc()){
-    echo "<tr>";
-    echo "<td>".$row['titolo']."</td>";
-    echo "<td>".$row['data']."</td>";
-    echo "<td>".$row['luogo']."</td>";
-    echo "<td>".$row['categoria']."</td>";
-    echo "</tr>";
-
-
-  }
 }
 ?>
 </body>
