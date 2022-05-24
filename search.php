@@ -103,7 +103,13 @@ function search(){
   $row = $result->fetch_assoc();
   $id_categoria = $row['idCategoria'];
   */
-  $sql = "SELECT * FROM eventi join categorie on eventi.categoria = categorie.idCategoria WHERE categorie.descrizione = '$categoria' /*AND (luogo LIKE '$citta'% OR data LIKE '$data'%)*/;";
+  if($categoria == null) 
+    $categoria = "";
+  if($citta == null)
+    $citta = "@";
+  if($data == null)
+    $data = "";
+  $sql = "SELECT * FROM eventi join categorie on eventi.categoria = categorie.idCategoria WHERE categorie.descrizione = '$categoria' OR eventi.luogo LIKE '$citta%' OR eventi.data = '$data';";
   $result = $conn->query($sql);
   echo "<table>";
   echo "<tr>";
